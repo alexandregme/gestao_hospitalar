@@ -8,12 +8,15 @@
 		<meta http-equiv="Content-Language" content="pt-BR" />
         <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"> 
         <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")"> 
+        <link rel="shortcut icon" type="image/x-icon" href="@routes.Assets.at("images/favicon.ico")">
+        <script src="@routes.Assets.at("javascript/angular.min.js")"></script>
     </head>
     <body>
         
         <header class="topbar fill">
         	<h1 class="fill">
         		<a class="btn info large" id="add" href="@routes.Application.view()">Home</a>
+        		<a class="btn info large" id="add" href="@routes.TypePatrimonyController.view()">Patrimônios</a>
 				<a class="btn info large" id="add" href="@routes.DoctorController.view()">Medicos</a>
 				<a class="btn info large" id="add" href="@routes.DoctorController.view()">Equipamentos</a>
 				<a class="btn info large" id="add" href="@routes.DoctorController.view()">Pacientes</a>

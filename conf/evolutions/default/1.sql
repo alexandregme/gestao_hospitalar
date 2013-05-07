@@ -2,6 +2,50 @@
 
 # --- !Ups
 
+create sequence typePatrimony_seq start with 1000;
+create table typePatrimony(
+  id                        bigint not null,
+  name                      varchar(255),
+  constraint pk_typePatrimony primary key (id))
+;
+
+create sequence patrimony_seq start with 1000;
+create table patrimony (
+  id                        bigint not null,
+  name                      varchar(255),
+  constraint pk_patrimony primary key (id))
+;
+
+create sequence patients_seq start with 1000;
+create table patients(
+  id                        bigint not null,
+  name                      varchar(255),
+  constraint pk_patients primary key (id))
+;
+
+create sequence financial_seq start with 1000;
+create table financial(
+  id                        bigint not null,
+  name                      varchar(255),
+  constraint pk_financial primary key (id))
+;
+
+create sequence healthInsurance_seq start with 1000;
+create table healthInsurance(
+  id                        bigint not null,
+  name                      varchar(255),
+  constraint pk_healthInsurance primary key (id))
+;
+
+create sequence doctor_seq start with 1000;
+create table doctor (
+  id                        bigint not null,  
+  name                      varchar(255),
+  constraint pk_doctor primary key (id))
+;
+
+
+
 create table company (
   id                        bigint not null,
   name                      varchar(255),
