@@ -5,11 +5,9 @@ import models.Computer;
 import models.TypePatrimony;
 import play.data.Form;
 import play.db.jpa.Transactional;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.createForm;
-import views.html.doctor;
-import views.html.editForm;
 import views.html.typePatrimony;
 
 public class TypePatrimonyController extends Controller  {
@@ -24,7 +22,7 @@ public class TypePatrimonyController extends Controller  {
 		  Form<TypePatrimony> typePatrimonyForm = form(TypePatrimony.class).bindFromRequest();
 		  
 		  if(typePatrimonyForm.hasErrors()) {
-		      return badRequest(typePatrimony.render(typePatrimonyForm));
+			  return ok(Json.toJson("c"));
 		  }
 		  
 		  typePatrimonyForm.get().save();
@@ -41,12 +39,10 @@ public class TypePatrimonyController extends Controller  {
        */
       @Transactional(readOnly=true)
       public static Result edit(Long id) {
-          Form<Computer> computerForm = form(Computer.class).fill(
+          Form<Computer> editForm = form(Computer.class).fill(
               Computer.findById(id)
           );
-          return ok(
-              editForm.render(id, computerForm)
-          );
+          return ok(Json.toJson("c"));
       }
       
       /**
@@ -56,26 +52,26 @@ public class TypePatrimonyController extends Controller  {
        */
       @Transactional(readOnly=true)
       public static Result update(Long id) {
-          Form<Computer> computerForm = form(Computer.class).fill(
+          Form<Computer> editForm = form(Computer.class).fill(
               Computer.findById(id)
           );
-          return ok(
-              editForm.render(id, computerForm)
-          );
+          return ok(Json.toJson("c"));
       }
       
-      public static void delete(Long id) {
+      public static Result delete(Long id) {
+    	  return ok(Json.toJson("c"));
       }
       
-      public static void list(Long id) {
+      public static Result list(Long id) {
+    	  return ok(Json.toJson("c"));
     	  
       }
       @Transactional(readOnly=true)
-      public static Result view(int page, String sortBy, String order, String filter){
+      public static Result view(){
     	  
           Form<TypePatrimony> typePatrimonyForm = form(TypePatrimony.class);
           
-          return ok(typePatrimony.render(typePatrimonyForm,TypePatrimony.page(page, 20, sortBy, order, filter),sortBy, order, filter));
+          return ok(typePatrimony.render());
     	  
       }
 

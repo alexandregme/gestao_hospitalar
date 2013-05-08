@@ -5,7 +5,7 @@
 create sequence typePatrimony_seq start with 1000;
 create table typePatrimony(
   id                        bigint not null,
-  name                      varchar(255),
+  description               varchar(255),
   constraint pk_typePatrimony primary key (id))
 ;
 

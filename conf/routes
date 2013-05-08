@@ -5,7 +5,7 @@
 # Default path will just redirect to the computer list
 GET     /                           controllers.Application.view()
 
-GET		/typePatrimony						controllers.TypePatrimonyController.view(p:Int ?= 0, s ?= "description", o ?= "asc", f ?= "")
+GET		/typePatrimony						controllers.TypePatrimonyController.view()
 POST    /typePatrimony         			 	controllers.TypePatrimonyController.save()
 GET     /typePatrimony/:id      			controllers.TypePatrimonyController.edit(id:Long)
 POST    /typePatrimony/:id     			 	controllers.TypePatrimonyController.update(id:Long)
