@@ -1,60 +1,85 @@
 @main {
 
-    
-    <h1 id="homeTitle">Patrimônios</h1>
-    
-    <input type="text" ng-model="yourName" />
-    
-    <h2>Adicionar um patrimônio {{yourName}} !</h2>
-    
-    
-        
-        <fieldset>
+	<h1 id="homeTitle">Patrimônios</h1>
+	
+	<div ng-controller="SaveCtrl">
+		<div class="well">
+			<h2>Adicionar um patrimônio!</h2>
+			<input type="text" ng-model="yourName" />
+	    	<fieldset>
+		        <input type="submit" value="Salvar" class="btn primary" ng-click="save()" /> 
+	    	</fieldset>
+	 	</div>
+	 </div>
 
-            
-            <input type="submit" value="Salvar" class="btn primary"> 
+	 
 
-        </fieldset>
+	<div ng-controller="ListCtrl">
+		<table class="computers zebra-striped">
+			<thead>
+				<tr>
+					<td>Id</td>
+					<td>Descrição</td>
+					<td></td>
+					<td></td>
+				</tr>
+			</thead>
+			<tbody >
+				<tr ng-repeat="item in list.data">
+	    			<td>{{item.id}} </td>
+	       	        <td> {{item.description}} </td>
+	                <td><a href="">Editar</a> </td>
+	                <td><a href="">Editar</a> </td>
+               </tr>
+	        </tbody>
+	    </table>
 
-
-    <h2></h2>
-
-
-        <div class="alert-message warning">
-            <strong>Done!</strong>
-        </div>
-  
-
-
-        
-        <div class="well">
-            <em>Nothing to display</em>
-        </div>
-
-        
-        <table class="computers zebra-striped">
-            <thead>
-                <tr>
-
-                    
-                </tr>
-            </thead>
-            <tbody>
-	  
-                    <tr>
-            	        <td>  </td>
-        	            <td> </td>
-    	                <td><a href="">edit</a></td>
-	                    <td><a href="">edit</a></td>
-                    </tr>
-
-            </tbody>
-        </table>
-
-        <div id="pagination" class="pagination">
-            <ul>
- 
-            </ul>
-        </div>
-
-    }
+	
+	    <div id="pagination" class="pagination">
+	        <ul>
+	
+	        </ul>
+	    </div>
+</div>	    
+	<script type="text/javascript">
+	
+		function SaveCtrl ($scope,$http) {
+		
+			$scope.save = function(){
+				console.log("Help!");
+				var data = {id:null,description:$scope.yourName}
+				var _url = "@routes.TypePatrimonyController.save()";
+				$http.post(_url, JSON.stringify(data)).success(
+					function(data, status, headers, config) {
+					//$scope.list = data;
+					console.log(status);
+				})
+				. error(function(data, status, headers, config) {
+				    // called asynchronously if an error occurs
+				    // or server returns response with an error status.
+					  console.log(status);
+				  });
+			}
+		}	
+	
+		function ListCtrl ($scope,$http) {
+			
+				var _url = "@routes.TypePatrimonyController.list()";
+				$http({method: 'GET', url: _url}).
+			  		success(function(data, status, headers, config) {
+					$scope.list = data;
+					console.log(status);
+			    // this callback will be called asynchronously
+			    // when the response is available
+			  })
+			  . error(function(data, status, headers, config) {
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+				  console.log(status);
+			  });
+		
+		}
+		
+    </script>
+	
+}

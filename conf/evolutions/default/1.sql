@@ -2,9 +2,10 @@
 
 # --- !Ups
 
-create sequence typePatrimony_seq start with 1000;
+create sequence typepatrimony_seq start with 1000;
+
 create table typePatrimony(
-  id                        bigint not null,
+  id                        bigint not null DEFAULT nextval('typepatrimony_seq'),
   description               varchar(255),
   constraint pk_typePatrimony primary key (id))
 ;

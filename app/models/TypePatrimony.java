@@ -1,16 +1,13 @@
 package models;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
-
-import models.Computer.Page;
 
 import play.data.validation.Constraints;
 import play.db.jpa.JPA;
@@ -19,28 +16,37 @@ import play.db.jpa.JPA;
  * TypePatrimony entity managed by JPA
  */
 
-@Entity
-@SequenceGenerator(name = "typePatrimony_seq", sequenceName = "typePatrimony_seq")
-public class TypePatrimony {
-
+@Entity 
+@SequenceGenerator(name = "typepatrimony_id_seq", sequenceName = "typepatrimony_id_seq" , allocationSize=1)
+public class TypePatrimony extends Model {
+	
 		@Id
-	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "typePatrimony_seq")
+		@Column(name="id")
+		@GeneratedValue(generator = "typepatrimony_id_seq")
 	    public Long id;
-	    
-	    @Constraints.Required
-	    public String description;
-	    
-	    public static TypePatrimony findById(Long id) {
-	    	
-	        return JPA.em().find(TypePatrimony.class, id);
-	        
-	    }
+		
+		@Constraints.Required
+		@Column(name="description")
+   	    public String description;
 	    
 	    /**
 	     * Insert this new type of patrimony.
 	     */
 	    public void save() {
-	        JPA.em().persist(this);
+	    	//this.id = id;
+	    
+	    	//JPA.em().persist(this);
+	    	
+	    	JPA.em().createNativeQuery("INSERT INTO typePatrimony (description) VALUES (?)").setParameter(1,this.description);
+	    	
+	    	//JPA.em().persist(this);
+	    	
+	    }
+
+	    public static TypePatrimony findById(Long id) {
+	    	
+	        return JPA.em().find(TypePatrimony.class, id);
+	        
 	    }
 	    
 	    
