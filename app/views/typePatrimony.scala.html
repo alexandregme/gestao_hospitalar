@@ -1,76 +1,115 @@
 @main {
 
+<div ng-controller="PatriomnyCtrl">
 	<h1 id="homeTitle">Patrimônios</h1>
 	
-	<div ng-controller="SaveCtrl">
-		<div class="well">
-			<h2>Adicionar um patrimônio!</h2>
-			<input type="text" ng-model="yourName" />
-	    	<fieldset>
-		        <input type="submit" value="Salvar" class="btn primary" ng-click="save()" /> 
-	    	</fieldset>
-	 	</div>
-	 </div>
+	<div class="alert-message block-message success">{{message}}</div>
+
+	<div class="well">
+		<h2>Adicionar um patrimônio</h2> <br />
+
+		
+	   	<fieldset>
+	   		<input type="text" ng-model="description" /><br />	<br />	
+			<input type="submit" value="Salvar" class="btn success" ng-click="save()" />
+	        <input type="button" value="Limpar" class="btn" ng-click="clear()" /> 
+    	</fieldset>
+ 	</div>
 
 	 
-
-	<div ng-controller="ListCtrl">
-		<table class="computers zebra-striped">
-			<thead>
-				<tr>
-					<td>Id</td>
-					<td>Descrição</td>
-					<td></td>
-					<td></td>
-				</tr>
-			</thead>
-			<tbody >
-				<tr ng-repeat="item in list.data">
-	    			<td>{{item.id}} </td>
-	       	        <td> {{item.description}} </td>
-	                <td><a href="">Editar</a> </td>
-	                <td><a href="">Editar</a> </td>
-               </tr>
+		
+	<table class="computers zebra-striped" >
+		<thead>
+			<tr>
+				<td>Id</td>
+				<td>Descrição</td>
+				<td>Ações</td>
+			</tr>
+		</thead>
+		<tbody >
+			<tr ng-repeat="item in data">
+	   			<td ng-model="id">{{item.id}}</td>
+	   	        <td> {{item.description}} </td>
+	            <td><input type="button" value="Editar" class="btn primary" ng-click="edit($index)">&nbsp;&nbsp;<input type="button" value="Deletar" class="btn danger" ng-click="delete(item.id)"></td>
+             </tr>
 	        </tbody>
 	    </table>
 
-	
-	    <div id="pagination" class="pagination">
-	        <ul>
-	
-	        </ul>
-	    </div>
 </div>	    
 	<script type="text/javascript">
 	
-		function SaveCtrl ($scope,$http) {
-		
+		function PatriomnyCtrl ($scope, $http) {
+			
+			var object = null
+			
+			$scope.edit = function(_id){
+				
+				object = $scope.data[_id];
+				
+				$scope.description = object.description;
+				
+				
+				
+				console.log();
+			}
+			
 			$scope.save = function(){
-				console.log("Help!");
-				var data = {id:null,description:$scope.yourName}
-				var _url = "@routes.TypePatrimonyController.save()";
+				var data;
+				if (object == null)
+					data = { id:null, description : $scope.description }
+				else
+					data = { id:object.id, description : $scope.description }
+				
+				var _url;
+				
+				if (data.id == null)
+					_url = "@routes.TypePatrimonyController.save()";
+				else
+					_url = "@routes.TypePatrimonyController.edit()";
+				
 				$http.post(_url, JSON.stringify(data)).success(
-					function(data, status, headers, config) {
-					//$scope.list = data;
-					console.log(status);
+						function(data, status, headers, config) {
+							$scope.list();
+							$scope.clear();
+							$scope.message = data.message;
+							object = null;
+				})
+				
+				. error(function(data, status, headers, config) {
+					
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				});
+			}
+			
+			$scope.delete = function(_id){
+				
+				var data = { id:_id };
+				
+				var _url = "@routes.TypePatrimonyController.delete()";
+				
+				$http.post(_url, JSON.stringify(data)).success(	
+						function(data, status, headers, config) {
+							$scope.list();
+							$scope.clear();
+							$scope.message = data.message;
 				})
 				. error(function(data, status, headers, config) {
-				    // called asynchronously if an error occurs
-				    // or server returns response with an error status.
-					  console.log(status);
-				  });
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+				})	
+				
 			}
-		}	
-	
-		function ListCtrl ($scope,$http) {
 			
+
+			
+			$scope.list = function () {
+				
 				var _url = "@routes.TypePatrimonyController.list()";
 				$http({method: 'GET', url: _url}).
 			  		success(function(data, status, headers, config) {
-					$scope.list = data;
-					console.log(status);
-			    // this callback will be called asynchronously
-			    // when the response is available
+			  		$scope.data = data.data;
+					// this callback will be called asynchronously
+			    	// when the response is available
 			  })
 			  . error(function(data, status, headers, config) {
 			    // called asynchronously if an error occurs
@@ -78,8 +117,15 @@
 				  console.log(status);
 			  });
 		
+			}
+			
+			$scope.clear = function () {
+				$scope.description = '';
+				$scope.message = '';
+			}
+			$scope.list();
+		
 		}
 		
     </script>
-	
 }

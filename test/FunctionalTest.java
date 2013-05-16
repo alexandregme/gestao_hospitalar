@@ -15,7 +15,7 @@ public class FunctionalTest {
     public void redirectHomePage() {
         running(fakeApplication(), new Runnable() {
            public void run() {
-               Result result = callAction(controllers.routes.ref.Application.view());
+               Result result = callAction(controllers.routes.ref.Application.index());
 
                assertThat(status(result)).isEqualTo(SEE_OTHER);
                assertThat(redirectLocation(result)).isEqualTo("/computers");

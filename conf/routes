@@ -3,30 +3,15 @@
 # ~~~~
 
 # Default path will just redirect to the computer list
-GET     /                           controllers.Application.view()
+GET     /                           controllers.Application.index()
 
 GET		/typePatrimony						controllers.TypePatrimonyController.view()
 GET		/typePatrimony/list					controllers.TypePatrimonyController.list()
 POST    /typePatrimony/save   			 	controllers.TypePatrimonyController.save()
-
-
-
-GET     /typePatrimony/:id      			controllers.TypePatrimonyController.edit(id:Long)
-POST    /typePatrimony/:id     			 	controllers.TypePatrimonyController.update(id:Long)
-POST    /typePatrimony/:id/delete       	controllers.TypePatrimonyController.delete(id:Long)
-
-
-GET    /doctors                   	controllers.DoctorController.view
-
-GET    /doctors/save                   	controllers.DoctorController.save
-GET    /doctors/list                   	controllers.DoctorController.list
-
-
-
+POST    /typePatrimony/delete   			controllers.TypePatrimonyController.delete()
+POST    /typePatrimony/edit   				controllers.TypePatrimonyController.edit()
 
 # Computers list (look at the default values for pagination parameters)
-
-
 GET     /computers                  controllers.Application.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
 
 # Add computer

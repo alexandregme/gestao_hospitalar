@@ -1,4 +1,4 @@
-@(currentPage: Computer.Page, currentSortBy: String, currentOrder: String, currentFilter: String)
+@(currentPage: com.avaje.ebean.Page[Computer], currentSortBy: String, currentOrder: String, currentFilter: String)
 
 @****************************************
 * Helper generating navigation links    *
@@ -117,7 +117,7 @@
                     </li>
                 }
                 <li class="current">
-                    <a>Displaying @currentPage.getDisplayXtoYofZ</a>
+                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
                 </li>
                 @if(currentPage.hasNext) {
                     <li class="next">

@@ -3,16 +3,19 @@ package models;
 import java.util.*;
 import javax.persistence.*;
 
+import play.db.ebean.*;
 import play.data.format.*;
 import play.data.validation.*;
 
-import play.db.jpa.*;
+
+import com.avaje.ebean.*;
+
 
 /**
- * Company entity managed by JPA
+ * Company entity managed by Ebean
  */
 @Entity 
-public class Company {
+public class Company extends Model {
 
     @Id
     public Long id;
@@ -20,14 +23,14 @@ public class Company {
     @Constraints.Required
     public String name;
     
-    public static Company findById(Long id) {
-        return JPA.em().find(Company.class, id);
-    }
+    /**
+     * Generic query helper for entity Company with id Long
+     */
+    public static Model.Finder<Long,Company> find = new Model.Finder<Long,Company>(Long.class, Company.class);
 
     public static Map<String,String> options() {
-        List<Company> companies = JPA.em().createQuery("from Company order by name").getResultList();
         LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
-        for(Company c: companies) {
+        for(Company c: Company.find.orderBy("name").findList()) {
             options.put(c.id.toString(), c.name);
         }
         return options;

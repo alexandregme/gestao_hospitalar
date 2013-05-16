@@ -2,11 +2,10 @@ package controllers;
 
 import java.util.*;
 
-import play.*;
 import play.mvc.*;
 import play.data.*;
 import static play.data.Form.*;
-import play.db.jpa.*;
+import play.*;
 
 import views.html.*;
 
@@ -20,14 +19,16 @@ public class Application extends Controller {
     /**
      * This result directly redirect to application home.
      */
-    public static Result GO_HOME = redirect(routes.Application.view());
+    public static Result GO_HOME = redirect(
+        routes.Application.list(0, "name", "asc", "")
+    );
     
     /**
      * Handle default path requests, redirect to computers list
      */
-    public static Result view() {
-       	return ok(main.render(null));
-      }
+    public static Result index() {
+        return GO_HOME;
+    }
 
     /**
      * Display the paginated list of computers.
@@ -37,11 +38,10 @@ public class Application extends Controller {
      * @param order Sort order (either asc or desc)
      * @param filter Filter applied on computer names
      */
-    @Transactional(readOnly=true)
     public static Result list(int page, String sortBy, String order, String filter) {
         return ok(
             list.render(
-                Computer.page(page, 20, sortBy, order, filter),
+                Computer.page(page, 10, sortBy, order, filter),
                 sortBy, order, filter
             )
         );
@@ -52,10 +52,9 @@ public class Application extends Controller {
      *
      * @param id Id of the computer to edit
      */
-    @Transactional(readOnly=true)
     public static Result edit(Long id) {
         Form<Computer> computerForm = form(Computer.class).fill(
-            Computer.findById(id)
+            Computer.find.byId(id)
         );
         return ok(
             editForm.render(id, computerForm)
@@ -67,7 +66,6 @@ public class Application extends Controller {
      *
      * @param id Id of the computer to edit
      */
-    @Transactional
     public static Result update(Long id) {
         Form<Computer> computerForm = form(Computer.class).bindFromRequest();
         if(computerForm.hasErrors()) {
@@ -81,7 +79,6 @@ public class Application extends Controller {
     /**
      * Display the 'new computer form'.
      */
-    @Transactional(readOnly=true)
     public static Result create() {
         Form<Computer> computerForm = form(Computer.class);
         return ok(
@@ -92,7 +89,6 @@ public class Application extends Controller {
     /**
      * Handle the 'new computer form' submission 
      */
-    @Transactional
     public static Result save() {
         Form<Computer> computerForm = form(Computer.class).bindFromRequest();
         if(computerForm.hasErrors()) {
@@ -106,9 +102,8 @@ public class Application extends Controller {
     /**
      * Handle computer deletion
      */
-    @Transactional
     public static Result delete(Long id) {
-        Computer.findById(id).delete();
+        Computer.find.ref(id).delete();
         flash("success", "Computer has been deleted");
         return GO_HOME;
     }
