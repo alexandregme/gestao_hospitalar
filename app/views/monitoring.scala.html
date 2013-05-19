@@ -20,9 +20,9 @@
 	   	        <td> {{item.patient.cpf}} </td>
 	   	        <td> {{item.patient.name}} </td>
 	   	        <td> {{item.bed.description}} </td>
-	            <td><a class="btn primary"href="@routes.PatientController.view({{item.id}})">Pacientes</a>&nbsp;&nbsp;
-	            <input type="button" value="Liberar Paciente" class="btn danger" ng-click="release(item.id)">
-	            
+	            <td>
+	            	<a class="btn primary" href="" ng-click="clinicalRecord(item.id)">Acompanhamento</a>&nbsp;&nbsp;
+	          	  	<input type="button" value="Liberar Paciente" class="btn danger" ng-click="release(item.id)">
 	            </td>
              </tr>
 	        </tbody>
@@ -47,6 +47,13 @@
 		
 			}
 
+			$scope.clinicalRecord = function(_id){
+				
+				window.location = "clinicalRecord/"+_id;
+
+			}
+			
+			
 			
 			$scope.release = function(_id){
 				var data = { id:_id };

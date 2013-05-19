@@ -17,7 +17,7 @@ public class BedsController  extends Controller{
         
    	 List<Beds> beds = Beds.find.where("available = true").findList();
   	 
-   	 protocol = new Protocol('s', Messages.get("CONSULTA_REALIZADA"), beds, 1);
+   	 protocol = new Protocol('s', Messages.get("CONSULTA_REALIZADA"), beds, beds.size());
   	  	
    	 return ok(Json.toJson(protocol));
 

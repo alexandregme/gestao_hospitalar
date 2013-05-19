@@ -1,3 +1,5 @@
+@(id: Long)
+
 @main {
 
 <div ng-controller="ClinicalRecordCtrl">
@@ -7,16 +9,18 @@
 	<div class="alert-message block-message success">{{message}}</div>
 
 	<div class="well">
-		<h2>Adicionar um paciente</h2> <br />
-
+		<h2>InternaÃ§Ã£o: @id </h2> <br />
+		<b>Nome : </b>{{intern.patient.name}}<br />
+		<b>Leito : </b>{{intern.bed.description}}
+		
 		<form class="ng-pristine ng-valid">
 		   	<fieldset >
     			<label for="name">Medico:</label>
     			<div class="input">
-    				<select ng-options="item.typeexamination.description for item in typeexaminations"   ng-model="typeexamination"></select>
+    				<select ng-options="item.name for item in professionals"   ng-model="professional"></select>
 		    	</div>
 		    	<br />
-		    	<label for="name">Descrição:</label>
+		    	<label for="name">Acompanhamento:</label>
     			<div class="input">
 				    <input type = "text" ng-model = "description" />
 		    	</div>
@@ -35,14 +39,14 @@
 			<tr>
 				<td>Id</td>
 				<td>Medico</td>
-				<td>Descrição</td>
+				<td>Acompanhamento</td>
 			</tr>
 		</thead>
 		<tbody >
-			<tr ng-repeat="item in data">
+			<tr ng-repeat="item in records">
 	   			<td ng-model="id">{{item.id}}</td>
-	   	        <td> {{item.medico.name}} </td>
-	   	        <td> {{item.descrição}} </td>
+	   	        <td> {{item.professional.name}} </td>
+	   	        <td> {{item.description}} </td>
              </tr>
 	        </tbody>
 	    </table>
@@ -54,9 +58,9 @@
 
 			$scope.save = function(){
 			
-				var data = { id : null , name : $scope.name, endereco : $scope.endereco, cpf : $scope.cpf }
+				var data = { id : null , intern :{ id : @id} , professional : $scope.professional, description: $scope.description}
 				
-				var _url = "@routes.PatientController.save()";
+				var _url = "@routes.ClinicalRecordController.save()";
 				
 				$http.post(_url, JSON.stringify(data)).success(
 						function(data, status, headers, config) {
@@ -71,34 +75,74 @@
 				});
 			}
 			
-
+			$scope.listProfessionals = function () {
+				
+				var _url = "@routes.ProfessionalController.list()";
+				$http({method: 'GET', url: _url}).
+			  		success(function(data, status, headers, config) {
+			  		$scope.professionals = data.data;
+					// this callback will be called asynchronously
+			    	// when the response is available
+			  })
+			  . error(function(data, status, headers, config) {
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+				  $scope.message = "Erro ao chamar a url " + _url + " status " + status;
+			  });
+			}
+				
+			$scope.getInfo = function () {
+				
+				var data = { id : @id}
+				
+				var _url = "@routes.InternController.getinfo()";
+				
+				$http.post(_url, JSON.stringify(data)).success(
+						function(data, status, headers, config) {
+							
+							$scope.intern = data.data;
+							
+				})
+				. error(function(data, status, headers, config) {
+					
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				})
+			}
+			
 			$scope.list = function () {
 				
-				var _url = "@routes.PatientController.list()";
+				var data = { id : @id}
 				
-				$http({method: 'GET', url: _url}).success(function(data, status, headers, config) {
+				var _url = "@routes.ClinicalRecordController.list()";
+				
+				$http.post(_url, JSON.stringify(data)).success(
+						function(data, status, headers, config) {
+							
+							$scope.records = data.data;
+							$scope.message = data.message;
+							
+				})
+				. error(function(data, status, headers, config) {
 					
-			  		$scope.data = data.data;
-
-				}).error(function(data, status, headers, config) {
-
-					console.log(status);
-			  	});
-
-
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				});
 		
 			}
 			
 			$scope.clear = function () {
-				$scope.name = '';
-				$scope.cpf = '';
-				$scope.endereco = '';
+				$scope.listProfessionals();
+				$scope.description = '';
 				$scope.message = '';
 			}
 			
 			$scope.list();
-		
+			$scope.listProfessionals();
+			$scope.getInfo();
+			
 		}
 		
     </script>
 }
+

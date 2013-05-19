@@ -3,6 +3,7 @@ package controllers;
 import java.util.List;
 
 import models.Beds;
+import models.ClinicalRecord;
 import models.Intern;
 
 import org.codehaus.jackson.JsonNode;
@@ -23,7 +24,7 @@ public class InternController extends Controller  {
 		JsonNode json = request().body().asJson();
 
 		Intern i = Json.fromJson(json, Intern.class);
-
+		
 		try{
 			Beds b = Beds.find.byId(i.bed.id);
 
@@ -31,6 +32,8 @@ public class InternController extends Controller  {
 
 			b.save();
 
+			i.released = false;
+			
 			i.save();
 
 			protocol = new Protocol('s',Messages.get("INSERT"), i, 1);
@@ -61,7 +64,9 @@ public class InternController extends Controller  {
 
 			b.save();
 
-			Intern.find.ref(i.id).delete();
+			intern.released = true;
+			
+			intern.save();
 
 			protocol = new Protocol('s',"Leito Liberado", i, 1);
 
@@ -75,8 +80,22 @@ public class InternController extends Controller  {
 	}
 
 	public static Result list() {
+		 
+		List<Intern> intern = Intern.find.where("released = false").findList();
 
-		List<Intern> intern = Intern.find.all();
+		protocol = new Protocol('s', Messages.get("CONSULTA_REALIZADA"), intern, 1);
+
+		return ok(Json.toJson(protocol));
+
+	}
+	
+	public static Result getinfo() {
+
+		JsonNode json = request().body().asJson();
+		
+		Intern i = Json.fromJson(json, Intern.class);
+		
+		Intern intern = Intern.find.byId(i.id);
 
 		protocol = new Protocol('s', Messages.get("CONSULTA_REALIZADA"), intern, 1);
 

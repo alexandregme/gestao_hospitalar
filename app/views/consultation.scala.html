@@ -22,14 +22,14 @@
 	    	
 	    	<div>
 	    		<label for="name">Convênios : </label> 
-	    		<select ng-options="item.description for item in convenants" ng-change="listAreas()" ng-model="convenant"></select>
+	    		<select ng-options="item.description for item in covenants" ng-change="listAreas()" ng-model="covenant"></select>
 	    	</div>
 	    	
 	    	<br />
 	    	
 	    	<div>
 	    		<label for="name">Areas atendimento : </label>
-	    		<select ng-options="item.typeexamination.description for item in typeexaminations"   ng-model="typeexamination"></select>
+	    		<select ng-options="item.typeexamination.description for item in typeexaminations" ng-model="typeexamination"></select>
 	    	</div>
 	    	
 	    	<br />
@@ -81,21 +81,56 @@
 			
 			$scope.intern = function(){
 				
-				
-				var data = { id : null , patient : $scope.patient , bed: $scope.bed}
-				
-				var _url = "@routes.InternController.intern()";
-				
-				$http.post(_url, JSON.stringify(data)).success(	
-						function(data, status, headers, config) {
-							$scope.message = data.message;
-							$scope.patient = data.data
-				})
-				. error(function(data, status, headers, config) {
+				if ($scope.patient == null){
 					
-					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					$scope.message = "Selecione um paciente.";
 					
-				})
+				} else {
+					
+					if ($scope.authorization == ''){
+						
+						$scope.message = "É necessario a autorização do convenio";
+						
+					}else{
+						
+						if($scope.authorization == false){
+							
+							$scope.message = "O convênio não autorizou.";
+							
+						} else {
+	
+							if ($scope.beds.length == 0){
+								
+								$scope.message = "Não existem leitos disponiveis.";
+								
+							}else{
+								
+								if($scope.bed == ""){
+									
+									$scope.message = "Selecione um leito.";
+										
+								}else{
+								
+									var data = { id : null , patient : $scope.patient , bed: $scope.bed}
+									
+									var _url = "@routes.InternController.intern()";
+									
+									$http.post(_url, JSON.stringify(data)).success(	
+											function(data, status, headers, config) {
+												$scope.message = data.message;
+												$scope.patient = data.data
+									})
+									. error(function(data, status, headers, config) {
+										
+										$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+										
+									})
+									$scope.clear();
+								}//fim bed não selecionada
+							}//fim bed
+						}//fim aturorization	
+					}//pedido de autorização 
+				}//fim name
 			}
 			
 			
@@ -105,7 +140,7 @@
 				
 				$http({method: 'GET', url: _url}).success(function(data, status, headers, config) {
 					
-			  		$scope.convenants = data.data;
+			  		$scope.covenants = data.data;
 
 				}).error(function(data, status, headers, config) {
 
@@ -121,6 +156,7 @@
 				$http({method: 'GET', url: _url}).success(function(data, status, headers, config) {
 					
 			  		$scope.beds = data.data;
+			  		$scope.bed = '';
 
 				}).error(function(data, status, headers, config) {
 
@@ -131,7 +167,7 @@
 
 			$scope.listAreas = function () {
 				
-				var data = { id : $scope.convenant.id , description : null}
+				var data = { id : $scope.covenant.id , description : null}
 				
 				var _url = "@routes.AuthorizationsController.byConvenants()";
 				
@@ -141,6 +177,7 @@
 							$scope.message = data.message;
 							
 							$scope.typeexaminations = data.data
+	
 							
 				})
 				. error(function(data, status, headers, config) {
@@ -152,37 +189,63 @@
 			}
 			
 			$scope.getAuthorization = function () {
-				var _url = "@routes.AuthorizationsController.getAuthorization()";
-				$http({method: 'GET', url: _url}).
-			  		success(function(data, status, headers, config) {
-		  			
-			  			if (data.data==true){
-			  				
-			  				$scope.authorization = "Autorizado";
-			  				$scope.listbeds();
-			  				
-			  			}
-			  			else
-			  				$scope.authorization = "Não autorizado";
-		  			
-					// this callback will be called asynchronously
-		    		// when the response is available
-		  		})
-		  		.error(function(data, status, headers, config) {
-			    // called asynchronously if an error occurs
-		    	// or server returns response with an error status.
-		  		$scope.message = "Erro ao chamar a url " + _url + " status " + status;
-		  		});
+
+				if ($scope.covenant == '' ){
+					
+					$scope.message = "Selecione o convênio.";
+					
+				} else{
+					
+					if ($scope.typeexamination == ''){
+					
+						$scope.message = "Selecione a área de atendimento.";
+						
+					} else{
+
+						var _url = "@routes.AuthorizationsController.getAuthorization()";
+						$http({method: 'GET', url: _url}).
+					  		success(function(data, status, headers, config) {
+				  			
+					  			if (data.data==true){
+
+					  				$scope.authorization = "Autorizado";
+
+					  				$scope.message = "Autorizado.";
+					  				
+					  				$scope.listbeds();
+					  				
+					  			}
+					  			else {
+					  				
+					  				$scope.authorization = "Não autorizado";
+					  				
+					  				$scope.message = "Não autorizado";
+					  			}
+				  			
+							// this callback will be called asynchronously
+				    		// when the response is available
+				  		})
+				  		.error(function(data, status, headers, config) {
+					    // called asynchronously if an error occurs
+				    	// or server returns response with an error status.
+				  		$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+				  		});
+					}
+				}
 				
 			}
 			
 			$scope.clear = function () {
-				$scope.name = '';
+				$scope.patient = '';
 				$scope.cpf = '';
-				$scope.endereco = '';
+				$scope.authorization = '';
+				$scope.covenant = '';
+				$scope.typeexamination = '';
+				$scope.beds = '';
 				$scope.message = '';
 			}
 			
+			$scope.clear();
 			$scope.listCovenants();
 		
 		}

@@ -2,7 +2,7 @@ package controllers;
 
 import java.util.List;
 
-import models.ClinicRecord;
+import models.ClinicalRecord;
 import models.Intern;
 import play.i18n.Messages;
 import play.libs.Json;
@@ -26,7 +26,7 @@ public class MonitoringController  extends Controller{
 		Intern i = Intern.find.byId(id);
 		
 
-		List<ClinicRecord> cr = ClinicRecord.find.all();
+		List<ClinicalRecord> cr = ClinicalRecord.find.all();
 
 		protocol = new Protocol('s', Messages.get("CONSULTA_REALIZADA"), cr, 1);
 

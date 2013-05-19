@@ -40,10 +40,13 @@ public class PatientController extends Controller  {
 	}
 
 	public static Result edit() {
+		
 		JsonNode json = request().body().asJson();
+		
 		Patient p = Json.fromJson(json, Patient.class);
 
 		try{
+			
 			Patient patient = Patient.find.ref(p.id);
 
 			patient.name = p.name;
@@ -66,9 +69,11 @@ public class PatientController extends Controller  {
 	}
 
 	public static Result delete() {
+		
 		JsonNode json = request().body().asJson();
+		
 		Patient p = Json.fromJson(json, Patient.class);
-
+		
 		try{
 			Patient.find.ref(p.id).delete();
 
@@ -102,6 +107,7 @@ public class PatientController extends Controller  {
 	public static Result byCpf() {
 
 		JsonNode json = request().body().asJson();
+		
 		Patient p = Json.fromJson(json, Patient.class);
 
 		Patient patient = Patient.find.where().ilike("cpf", "%" + p.cpf + "%").findUnique();
