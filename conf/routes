@@ -3,7 +3,7 @@
 # ~~~~
 
 # Default path will just redirect to the computer list
-GET     /                           controllers.Application.index()
+GET     /                           controllers.Application.view()
 
 #Patriomonies
 GET		/patrimonies						controllers.PatrimoniesController.view()
@@ -21,8 +21,28 @@ POST    /professional/delete   				controllers.ProfessionalController.delete()
 POST    /professional/edit   				controllers.ProfessionalController.edit()
 
 
+#Pacientes
+
+GET		/patient   			 			controllers.PatientController.view()
+GET		/patient/list					controllers.PatientController.list()
+POST    /patient/save   			 	controllers.PatientController.save()
+POST    /patient/delete   				controllers.PatientController.delete()
+POST    /patient/edit   				controllers.PatientController.edit()
+
 #TypeExaminations
 GET		/typeexaminations/list					controllers.TypeExaminationsController.list()
+
+#Nova Consulta
+
+GET		/consultation					controllers.ConsultationController.view()
+
+#Monitoramento
+
+GET		/monitoring					controllers.MonitoringController.view()
+
+#Historico paciente
+
+GET		/clinicalRecord					controllers.ClinicalRecordController.view()
 
 # Computers list (look at the default values for pagination parameters)
 GET     /computers                  controllers.Application.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")

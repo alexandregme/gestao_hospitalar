@@ -28,11 +28,21 @@ create table professional (
   	id              SERIAL primary key,
   	name            varchar(255),
  	document       varchar(255),
- 	typeexamination    	integer references typeexaminations(id))
+ 	typeexamination_id	integer references typeexaminations(id))
 ;
 
+create table bed (  
+	id                        SERIAL primary key,
+  	description                      varchar(255),
+  	available					boolean)
+;
 
-
+create table patient (
+  	id              SERIAL primary key,
+  	name            varchar(255),
+ 	cpf				varchar(255),
+ 	endereco    	varchar(255))
+;
 
 
 create table company (
@@ -135,6 +145,21 @@ insert into authorizations (covenants,typeexaminations) values (7,12);
 insert into authorizations (covenants,typeexaminations) values (7,13);
 insert into authorizations (covenants,typeexaminations) values (7,14);
 insert into authorizations (covenants,typeexaminations) values (7,15);
+
+insert into bed (id,description,available) values (1,'Leito 1',true);
+insert into bed (id,description,available) values (2,'Leito 2',true);
+insert into bed (id,description,available) values (3,'Leito 3',true);
+insert into bed (id,description,available) values (4,'Leito 4',true);
+insert into bed (id,description,available) values (5,'Leito 5',true);
+insert into bed (id,description,available) values (6,'Leito 6',true);
+insert into bed (id,description,available) values (7,'Leito 7',true);
+insert into bed (id,description,available) values (8,'Leito 8',true);
+insert into bed (id,description,available) values (9,'Leito 9',true);
+insert into bed (id,description,available) values (10,'Leito 10',true);
+insert into bed (id,description,available) values (11,'Leito 11',true);
+
+
+
 
 
 
