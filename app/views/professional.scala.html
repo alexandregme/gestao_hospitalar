@@ -1,0 +1,177 @@
+@main {
+
+<div ng-controller="ProfessionalCtrl">
+
+	<h1 id="homeTitle">Profissionais</h1>
+	
+	<div class="alert-message block-message success">{{message}}</div>
+
+	<div class="well">
+		<h2>Adicionar um profissional</h2> <br />
+
+		<form class="ng-pristine ng-valid">
+		   	<fieldset >
+    			<label for="name">Nome:</label>
+    			<div class="input">
+    				<input type = "text" ng-model = "name" />
+		    	</div>
+		    	<br />
+		    	<label for="name">Especialidade:</label>
+    			<div class="input">
+				    <select ng-options="item.description for item in options" ng-model="typeexamination"></select>
+		    	</div>
+		    	<br />
+		    	<label for="name">Número documento:</label>
+    			<div class="input">
+    				<input type = "text" ng-model = "document" />
+		    	</div>
+	    	</fieldset>
+		  	<div class="actions">
+	    		<input type="submit" value="Salvar" class="btn success" ng-click="save()" />
+     			<input type="button" value="Limpar" class="btn" ng-click="clear()" /> 
+   			</div>
+    	</form>
+	
+ 	</div>
+	
+	<h2>Lista de profissionais</h2> <br />
+	
+	<table class="computers zebra-striped" >
+		<thead>
+			<tr>
+				<td>Id</td>
+				<td>Nome</td>
+				<td>Especialidade</td>
+				<td>Documento</td>
+			</tr>
+		</thead>
+		<tbody >
+			<tr ng-repeat="item in data">
+	   			<td ng-model="id">{{item.id}}</td>
+	   	        <td> {{item.name}} </td>
+	   	        <td> {{item.typeexamination.description}} </td>
+	   	        <td> {{item.document}} </td>
+	            <td><input type="button" value="Editar" class="btn primary" ng-click="edit($index)">&nbsp;&nbsp;<input type="button" value="Deletar" class="btn danger" ng-click="delete(item.id)"></td>
+             </tr>
+	        </tbody>
+	    </table>
+
+</div>	    
+	<script type="text/javascript">
+	
+		function ProfessionalCtrl ($scope, $http) {
+			
+			var object = null
+				
+			$scope.edit = function(_id){
+				
+				object = $scope.data[_id];
+
+				$scope.document = object.document;
+				
+				$scope.name = object.name;
+			
+				$scope.typeexamination = object.typeexamination;
+				
+			}
+			
+			$scope.save = function(){
+				
+				var data;
+				
+				if (object == null)
+					
+					
+					data = { id : null , name : $scope.name, document : $scope.document, typeexamination  : $scope.typeexamination}
+				
+				else
+					
+					data = { id : object.id, name : $scope.name, document : $scope.document, typeexamination : $scope.typeexamination }				
+				
+				var _url;
+				
+				if (data.id == null)
+					
+					_url = "@routes.ProfessionalController.save()";
+				
+				else
+					
+					_url = "@routes.ProfessionalController.edit()";
+				
+				$http.post(_url, JSON.stringify(data)).success(
+						function(data, status, headers, config) {
+							$scope.list();
+							$scope.clear();
+							$scope.message = data.message;
+							object = null;
+				})
+				
+				. error(function(data, status, headers, config) {
+					
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				});
+			}
+			
+			$scope.delete = function(_id){
+				
+				var data = { id:_id };
+				
+				var _url = "@routes.ProfessionalController.delete()";
+				
+				$http.post(_url, JSON.stringify(data)).success(	
+						function(data, status, headers, config) {
+							$scope.list();
+							$scope.clear();
+							$scope.message = data.message;
+				})
+				. error(function(data, status, headers, config) {
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+				})	
+				
+			}
+			
+			$scope.listexaminations = function () {
+				
+				  var _urlType = "@routes.TypeExaminationsController.list()";
+					
+				  $http({method: 'GET', url: _urlType}).success(function(data, status, headers, config) {
+					$scope.options = data.data;
+	
+				}).error(function(data, status, headers, config) {
+					  console.log(status);
+				
+				});
+			}
+				
+			$scope.list = function () {
+				
+				var _url = "@routes.ProfessionalController.list()";
+				
+				$http({method: 'GET', url: _url}).success(function(data, status, headers, config) {
+					
+			  		$scope.data = data.data;
+
+				}).error(function(data, status, headers, config) {
+
+					console.log(status);
+			  	});
+
+
+		
+			}
+			
+			$scope.clear = function () {
+				$scope.name = '';
+				$scope.document = '';
+				$scope.typeexamination = '';
+				$scope.message = '';
+			}
+			
+			$scope.list();
+			$scope.listexaminations();
+		
+		}
+		
+    </script>
+}

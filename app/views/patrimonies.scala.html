@@ -8,16 +8,24 @@
 	<div class="well">
 		<h2>Adicionar um patrimônio</h2> <br />
 
-		
-	   	<fieldset>
-	   		<input type="text" ng-model="description" /><br />	<br />	
-			<input type="submit" value="Salvar" class="btn success" ng-click="save()" />
-	        <input type="button" value="Limpar" class="btn" ng-click="clear()" /> 
-    	</fieldset>
- 	</div>
+		<form class="ng-pristine ng-valid">
+		   	<fieldset >
+		   	
+		   		<div class="clearfix ">
+	    			<label for="name">Descrição</label>
+	    			<div class="input">
+	    				<input type="text" ng-model="description" />
+			    	</div>
 
-	 
-		
+				</div>
+	    	</fieldset>
+		  	<div class="actions">
+	    		<input type="submit" value="Salvar" class="btn success" ng-click="save()" />
+     			<input type="button" value="Limpar" class="btn" ng-click="clear()" /> 
+   			</div>
+    	</form>
+ 	</div>
+	<h2>Lista de patrimônios</h2>
 	<table class="computers zebra-striped" >
 		<thead>
 			<tr>
@@ -63,9 +71,9 @@
 				var _url;
 				
 				if (data.id == null)
-					_url = "@routes.TypePatrimonyController.save()";
+					_url = "@routes.PatrimoniesController.save()";
 				else
-					_url = "@routes.TypePatrimonyController.edit()";
+					_url = "@routes.PatrimoniesController.edit()";
 				
 				$http.post(_url, JSON.stringify(data)).success(
 						function(data, status, headers, config) {
@@ -86,7 +94,7 @@
 				
 				var data = { id:_id };
 				
-				var _url = "@routes.TypePatrimonyController.delete()";
+				var _url = "@routes.PatrimoniesController.delete()";
 				
 				$http.post(_url, JSON.stringify(data)).success(	
 						function(data, status, headers, config) {
@@ -104,7 +112,7 @@
 			
 			$scope.list = function () {
 				
-				var _url = "@routes.TypePatrimonyController.list()";
+				var _url = "@routes.PatrimoniesController.list()";
 				$http({method: 'GET', url: _url}).
 			  		success(function(data, status, headers, config) {
 			  		$scope.data = data.data;

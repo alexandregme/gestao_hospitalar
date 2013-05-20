@@ -5,11 +5,24 @@
 # Default path will just redirect to the computer list
 GET     /                           controllers.Application.index()
 
-GET		/typePatrimony						controllers.TypePatrimonyController.view()
-GET		/typePatrimony/list					controllers.TypePatrimonyController.list()
-POST    /typePatrimony/save   			 	controllers.TypePatrimonyController.save()
-POST    /typePatrimony/delete   			controllers.TypePatrimonyController.delete()
-POST    /typePatrimony/edit   				controllers.TypePatrimonyController.edit()
+#Patriomonies
+GET		/patrimonies						controllers.PatrimoniesController.view()
+GET		/patrimonies/list					controllers.PatrimoniesController.list()
+POST    /patrimonies/save   			 	controllers.PatrimoniesController.save()
+POST    /patrimonies/delete   				controllers.PatrimoniesController.delete()
+POST    /patrimonies/edit   				controllers.PatrimoniesController.edit()
+
+
+#Professional
+GET		/professional						controllers.ProfessionalController.view()
+GET		/professional/list					controllers.ProfessionalController.list()
+POST    /professional/save   			 	controllers.ProfessionalController.save()
+POST    /professional/delete   				controllers.ProfessionalController.delete()
+POST    /professional/edit   				controllers.ProfessionalController.edit()
+
+
+#TypeExaminations
+GET		/typeexaminations/list					controllers.TypeExaminationsController.list()
 
 # Computers list (look at the default values for pagination parameters)
 GET     /computers                  controllers.Application.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")

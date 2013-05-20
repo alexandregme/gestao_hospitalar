@@ -1,5 +1,8 @@
 # Messages
 
+CONSULTA_REALIZADA = Consulta realizada com sucesso.
+ERROR = Erro ao %s
+
 computers.list.title={0,choice,0#No computers|1#One computer|1<{0,number,integer} computers} found
 
 
