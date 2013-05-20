@@ -1,6 +1,6 @@
 @main {
 
-<div ng-controller="PatientCtrl">
+<div ng-controller="ClinicalRecordCtrl">
 
 	<h1 id="homeTitle">Pacientes</h1>
 	
@@ -11,24 +11,18 @@
 
 		<form class="ng-pristine ng-valid">
 		   	<fieldset >
-    			<label for="name">Nome:</label>
+    			<label for="name">Medico:</label>
     			<div class="input">
-    				<input type = "text" ng-model = "name" />
+    				<select ng-options="item.typeexamination.description for item in typeexaminations"   ng-model="typeexamination"></select>
 		    	</div>
 		    	<br />
-		    	<label for="name">CPF:</label>
+		    	<label for="name">Descrição:</label>
     			<div class="input">
-				    <input type = "text" ng-model = "cpf" />
-		    	</div>
-		    	<br />
-		    	<label for="name">EndereÃ§o:</label>
-    			<div class="input">
-    				<input type = "text" ng-model = "endereco" />
+				    <input type = "text" ng-model = "description" />
 		    	</div>
 	    	</fieldset>
 		  	<div class="actions">
-	    		<input type="submit" value="Salvar" class="btn success" ng-click="save()" />
-     			<input type="button" value="Limpar" class="btn" ng-click="clear()" /> 
+	    		<input type="submit" value="Adicionar" class="btn success" ng-click="save()" />
    			</div>
     	</form>
 	
@@ -40,18 +34,15 @@
 		<thead>
 			<tr>
 				<td>Id</td>
-				<td>CPF</td>
-				<td>Nome</td>
-				<td>EndereÃ§o</td>
+				<td>Medico</td>
+				<td>Descrição</td>
 			</tr>
 		</thead>
 		<tbody >
 			<tr ng-repeat="item in data">
 	   			<td ng-model="id">{{item.id}}</td>
-	   	        <td> {{item.cpf}} </td>
-	   	        <td> {{item.name}} </td>
-	   	        <td> {{item.endereco}} </td>
-	            <td><input type="button" value="Editar" class="btn primary" ng-click="edit($index)">&nbsp;&nbsp;<input type="button" value="Deletar" class="btn danger" ng-click="delete(item.id)"></td>
+	   	        <td> {{item.medico.name}} </td>
+	   	        <td> {{item.descrição}} </td>
              </tr>
 	        </tbody>
 	    </table>
@@ -59,53 +50,20 @@
 </div>	    
 	<script type="text/javascript">
 	
-		function PatientCtrl ($scope, $http) {
-			
-			var object = null
-				
-			$scope.edit = function(_id){
-				
-				object = $scope.data[_id];
+		function ClinicalRecordCtrl ($scope, $http) {
 
-				$scope.endereco = object.endereco;
-				
-				$scope.name = object.name;
-			
-				$scope.cpf = object.cpf;
-				
-			}
-			
 			$scope.save = function(){
+			
+				var data = { id : null , name : $scope.name, endereco : $scope.endereco, cpf : $scope.cpf }
 				
-				var data;
-				
-				if (object == null)
-					
-					
-					data = { id : null , name : $scope.name, endereco : $scope.endereco, cpf : $scope.cpf }
-				
-				else
-					
-					data = { id : object.id, name : $scope.name, endereco : $scope.endereco, cpf : $scope.cpf }				
-				
-				var _url;
-				
-				if (data.id == null)
-					
-					_url = "@routes.PatientController.save()";
-				
-				else
-					
-					_url = "@routes.PatientController.edit()";
+				var _url = "@routes.PatientController.save()";
 				
 				$http.post(_url, JSON.stringify(data)).success(
 						function(data, status, headers, config) {
 							$scope.list();
 							$scope.clear();
 							$scope.message = data.message;
-							object = null;
 				})
-				
 				. error(function(data, status, headers, config) {
 					
 					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
@@ -113,24 +71,7 @@
 				});
 			}
 			
-			$scope.delete = function(_id){
-				
-				var data = { id:_id };
-				
-				var _url = "@routes.PatientController.delete()";
-				
-				$http.post(_url, JSON.stringify(data)).success(	
-						function(data, status, headers, config) {
-							$scope.list();
-							$scope.clear();
-							$scope.message = data.message;
-				})
-				. error(function(data, status, headers, config) {
-					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
-				})	
-				
-			}
-			
+
 			$scope.list = function () {
 				
 				var _url = "@routes.PatientController.list()";

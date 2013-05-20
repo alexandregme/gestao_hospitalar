@@ -31,6 +31,6 @@ public class Intern extends Model{
 	@Column(name = "patient")
 	public Patient patient;
 	
-	public static Finder<Long,Authorizations> find = new Finder<Long,Authorizations>(Long.class, Authorizations.class);
+	public static Finder<Long,Intern> find = new Finder<Long,Intern>(Long.class, Intern.class);
 	
 }

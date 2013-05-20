@@ -31,9 +31,6 @@ create table professional (
  	typeexamination_id	integer references typeexaminations(id))
 ;
 
-
-
-
 create table bed (  
 	id                        SERIAL primary key,
   	description                      varchar(255),
@@ -54,6 +51,12 @@ create table intern (
  	patient_id integer references patient(id))
 ;
 
+create table clinicalrecord (
+  	id              SERIAL primary key,
+ 	professional_id	integer references professional(id),
+ 	intern_id	integer references intern(id),
+ 	description    	varchar(255))
+;
 
 
 create table company (

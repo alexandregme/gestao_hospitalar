@@ -40,10 +40,13 @@ GET		/consultation					controllers.ConsultationController.view()
 
 #Internar
 POST	/intern						controllers.InternController.intern()
+GET		/intern/list				controllers.InternController.list()
+POST	/intern/release				controllers.InternController.release()
 
 #Monitoramento
 
-GET		/monitoring					controllers.MonitoringController.view()
+GET		/monitoring								controllers.MonitoringController.view()
+POST	/monitoring/addInformation/:id			controllers.MonitoringController.addInformation(id:Long)
 
 #Convênios
 GET		/covenants/list					controllers.CovenantsController.list()

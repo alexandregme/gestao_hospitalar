@@ -20,8 +20,10 @@
 	   	        <td> {{item.patient.cpf}} </td>
 	   	        <td> {{item.patient.name}} </td>
 	   	        <td> {{item.bed.description}} </td>
-	            <td><input type="button" value="Adicionar Informação" class="btn primary" ng-click="addInformation($index)">&nbsp;&nbsp;
-	            <input type="button" value="Liberar Paciente" class="btn danger" ng-click="release(item.id)"></td>
+	            <td><a class="btn primary"href="@routes.PatientController.view({{item.id}})">Pacientes</a>&nbsp;&nbsp;
+	            <input type="button" value="Liberar Paciente" class="btn danger" ng-click="release(item.id)">
+	            
+	            </td>
              </tr>
 	        </tbody>
 	    </table>
@@ -42,9 +44,25 @@
 
 					console.log(status);
 			  	});
-
-
 		
+			}
+
+			
+			$scope.release = function(_id){
+				var data = { id:_id };
+								
+				var _url = "@routes.InternController.release()";
+				
+				$http.post(_url, JSON.stringify(data)).success(	
+						function(data, status, headers, config) {
+							$scope.message = data.message;
+							$scope.list();
+				})
+				. error(function(data, status, headers, config) {
+					
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				})
 			}
 			
 			$scope.clear = function () {
