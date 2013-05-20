@@ -1,0 +1,163 @@
+@main {
+
+<div ng-controller="PatientCtrl">
+
+	<h1 id="homeTitle">Pacientes</h1>
+	
+	<div class="alert-message block-message success">{{message}}</div>
+
+	<div class="well">
+		<h2>Adicionar um paciente</h2> <br />
+
+		<form class="ng-pristine ng-valid">
+		   	<fieldset >
+    			<label for="name">Nome:</label>
+    			<div class="input">
+    				<input type = "text" ng-model = "name" />
+		    	</div>
+		    	<br />
+		    	<label for="name">CPF:</label>
+    			<div class="input">
+				    <input type = "text" ng-model = "cpf" />
+		    	</div>
+		    	<br />
+		    	<label for="name">Endereço:</label>
+    			<div class="input">
+    				<input type = "text" ng-model = "endereco" />
+		    	</div>
+	    	</fieldset>
+		  	<div class="actions">
+	    		<input type="submit" value="Salvar" class="btn success" ng-click="save()" />
+     			<input type="button" value="Limpar" class="btn" ng-click="clear()" /> 
+   			</div>
+    	</form>
+	
+ 	</div>
+	
+	<h2>Lista de pacientes</h2> <br />
+	
+	<table class="computers zebra-striped" >
+		<thead>
+			<tr>
+				<td>Id</td>
+				<td>CPF</td>
+				<td>Nome</td>
+				<td>Endereço</td>
+			</tr>
+		</thead>
+		<tbody >
+			<tr ng-repeat="item in data">
+	   			<td ng-model="id">{{item.id}}</td>
+	   	        <td> {{item.cpf}} </td>
+	   	        <td> {{item.name}} </td>
+	   	        <td> {{item.endereco}} </td>
+	            <td><input type="button" value="Editar" class="btn primary" ng-click="edit($index)">&nbsp;&nbsp;<input type="button" value="Deletar" class="btn danger" ng-click="delete(item.id)"></td>
+             </tr>
+	        </tbody>
+	    </table>
+
+</div>	    
+	<script type="text/javascript">
+	
+		function PatientCtrl ($scope, $http) {
+			
+			var object = null
+				
+			$scope.edit = function(_id){
+				
+				object = $scope.data[_id];
+
+				$scope.endereco = object.endereco;
+				
+				$scope.name = object.name;
+			
+				$scope.cpf = object.cpf;
+				
+			}
+			
+			$scope.save = function(){
+				
+				var data;
+				
+				if (object == null)
+					
+					
+					data = { id : null , name : $scope.name, endereco : $scope.endereco, cpf : $scope.cpf }
+				
+				else
+					
+					data = { id : object.id, name : $scope.name, endereco : $scope.endereco, cpf : $scope.cpf }				
+				
+				var _url;
+				
+				if (data.id == null)
+					
+					_url = "@routes.PatientController.save()";
+				
+				else
+					
+					_url = "@routes.PatientController.edit()";
+				
+				$http.post(_url, JSON.stringify(data)).success(
+						function(data, status, headers, config) {
+							$scope.list();
+							$scope.clear();
+							$scope.message = data.message;
+							object = null;
+				})
+				
+				. error(function(data, status, headers, config) {
+					
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				});
+			}
+			
+			$scope.delete = function(_id){
+				
+				var data = { id:_id };
+				
+				var _url = "@routes.PatientController.delete()";
+				
+				$http.post(_url, JSON.stringify(data)).success(	
+						function(data, status, headers, config) {
+							$scope.list();
+							$scope.clear();
+							$scope.message = data.message;
+				})
+				. error(function(data, status, headers, config) {
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+				})	
+				
+			}
+			
+			$scope.list = function () {
+				
+				var _url = "@routes.PatientController.list()";
+				
+				$http({method: 'GET', url: _url}).success(function(data, status, headers, config) {
+					
+			  		$scope.data = data.data;
+
+				}).error(function(data, status, headers, config) {
+
+					console.log(status);
+			  	});
+
+
+		
+			}
+			
+			$scope.clear = function () {
+				$scope.name = '';
+				$scope.cpf = '';
+				$scope.endereco = '';
+				$scope.message = '';
+			}
+			
+			$scope.list();
+		
+		}
+		
+    </script>
+}

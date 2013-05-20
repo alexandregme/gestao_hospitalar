@@ -108,6 +108,12 @@ public class Application extends Controller {
         return GO_HOME;
     }
     
+    public static Result view(){
+
+   	 return ok(principal.render());
+   	 
+    }
+    
 
 }
             

@@ -1,0 +1,191 @@
+@main {
+
+	<div ng-controller="ConsultationCtrl">
+	
+		<h1 id="homeTitle">Nova Consulta</h1>
+		
+		<div class="alert-message block-message success">{{message}}</div>
+	
+	
+		<div class="well">
+			<h2>Pesquisar paciente</h2> <br />
+	    	
+	  		<div class="input">
+				<label for="name">CPF : </label> 
+			  	<input type = "text" ng-model = "cpf" /> 
+			  	<input type="submit" value="Pesquisar" class="btn success" ng-click="pesquisar()" />
+	    	</div><br />
+	    	<label for="name"><b>Paciente : </b>{{patient.name}}</label>
+	    	<br />
+	    	<br />
+	    	<br />
+	    	
+	    	<div>
+	    		<label for="name">Convênios : </label> 
+	    		<select ng-options="item.description for item in convenants" ng-change="listAreas()" ng-model="convenant"></select>
+	    	</div>
+	    	
+	    	<br />
+	    	
+	    	<div>
+	    		<label for="name">Areas atendimento : </label>
+	    		<select ng-options="item.typeexamination.description for item in typeexaminations"   ng-model="typeexamination"></select>
+	    	</div>
+	    	
+	    	<br />
+	    	<br />
+	    	<div>
+	    	<input type="submit" value="Pedir autorização" class="btn success" ng-click="getAuthorization()" />
+	    	</div>
+	    	<label for="name"><b>Situação : </b>{{authorization}}</label>
+	    	<br />
+	    	<br />
+	    	
+	    	<div>
+	    		<label for="name">Selecionar Leito : </label>
+	    		<select ng-options="item.description for item in beds" ng-model="bed"></select>
+	    	</div>
+	    	
+	    	 	<br />
+	    	<br />
+	    	
+	    	
+	    	<input type="submit" value="Internar" class="btn large danger" ng-click="intern()" />
+	    	
+	 	</div>
+	</div>	    
+	<script type="text/javascript">
+	
+		function ConsultationCtrl ($scope, $http) {
+			
+			var object = null
+				
+			$scope.pesquisar = function(cpf){
+				
+				
+				var data = { id : null , name : null, endereco : null, cpf : $scope.cpf }
+				
+				var _url = "@routes.PatientController.byCpf()";
+				
+				$http.post(_url, JSON.stringify(data)).success(	
+						function(data, status, headers, config) {
+							$scope.message = data.message;
+							$scope.patient = data.data
+				})
+				. error(function(data, status, headers, config) {
+					
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				})
+			}
+			
+			$scope.intern = function(){
+				
+				
+				var data = { id : null , patient : $scope.patient , bed: $scope.bed}
+				
+				var _url = "@routes.InternController.intern()";
+				
+				$http.post(_url, JSON.stringify(data)).success(	
+						function(data, status, headers, config) {
+							$scope.message = data.message;
+							$scope.patient = data.data
+				})
+				. error(function(data, status, headers, config) {
+					
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				})
+			}
+			
+			
+			$scope.listCovenants = function(){
+				
+				var _url = "@routes.CovenantsController.list()";
+				
+				$http({method: 'GET', url: _url}).success(function(data, status, headers, config) {
+					
+			  		$scope.convenants = data.data;
+
+				}).error(function(data, status, headers, config) {
+
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+			  	});
+		
+			}
+			
+			$scope.listbeds = function(){
+				
+				var _url = "@routes.BedsController.list()";
+				
+				$http({method: 'GET', url: _url}).success(function(data, status, headers, config) {
+					
+			  		$scope.beds = data.data;
+
+				}).error(function(data, status, headers, config) {
+
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+			  	});
+		
+			}
+
+			$scope.listAreas = function () {
+				
+				var data = { id : $scope.convenant.id , description : null}
+				
+				var _url = "@routes.AuthorizationsController.byConvenants()";
+				
+				$http.post(_url, JSON.stringify(data)).success(	
+						function(data, status, headers, config) {
+							
+							$scope.message = data.message;
+							
+							$scope.typeexaminations = data.data
+							
+				})
+				. error(function(data, status, headers, config) {
+					
+					$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+					
+				})
+		
+			}
+			
+			$scope.getAuthorization = function () {
+				var _url = "@routes.AuthorizationsController.getAuthorization()";
+				$http({method: 'GET', url: _url}).
+			  		success(function(data, status, headers, config) {
+		  			
+			  			if (data.data==true){
+			  				
+			  				$scope.authorization = "Autorizado";
+			  				$scope.listbeds();
+			  				
+			  			}
+			  			else
+			  				$scope.authorization = "Não autorizado";
+		  			
+					// this callback will be called asynchronously
+		    		// when the response is available
+		  		})
+		  		.error(function(data, status, headers, config) {
+			    // called asynchronously if an error occurs
+		    	// or server returns response with an error status.
+		  		$scope.message = "Erro ao chamar a url " + _url + " status " + status;
+		  		});
+				
+			}
+			
+			$scope.clear = function () {
+				$scope.name = '';
+				$scope.cpf = '';
+				$scope.endereco = '';
+				$scope.message = '';
+			}
+			
+			$scope.listCovenants();
+		
+		}
+		
+    </script>
+}

@@ -20,8 +20,8 @@ create table covenants (
 --- agreements  between covenant and types of medical examinations
 create table authorizations	(  
 	id                  SERIAL primary key,
-	covenants      		integer references covenant(id),
-	typeexaminations    integer references typeexaminations(id))
+	covenant_id      		integer references covenants(id),
+ 	typeexamination_id	integer references typeexaminations(id))
 ;
 
 create table professional (
@@ -30,6 +30,9 @@ create table professional (
  	document       varchar(255),
  	typeexamination_id	integer references typeexaminations(id))
 ;
+
+
+
 
 create table bed (  
 	id                        SERIAL primary key,
@@ -43,6 +46,14 @@ create table patient (
  	cpf				varchar(255),
  	endereco    	varchar(255))
 ;
+
+
+create table intern (
+  	id              SERIAL primary key,
+ 	bed_id	integer references bed(id),
+ 	patient_id integer references patient(id))
+;
+
 
 
 create table company (
@@ -106,45 +117,45 @@ insert into covenants (id,description) values (5,'MS ASSISTÊNCIA MÉDICA S/C LT
 insert into covenants (id,description) values (6,'SOCIEDADE PORTUGUESA DE BENEFICÊNCIA');
 insert into covenants (id,description) values (7,'UNIMED');
 
-insert into authorizations (covenants,typeexaminations) values (1,2);
-insert into authorizations (covenants,typeexaminations) values (1,3);
-insert into authorizations (covenants,typeexaminations) values (1,5);
-insert into authorizations (covenants,typeexaminations) values (1,6);
-insert into authorizations (covenants,typeexaminations) values (1,7);
-insert into authorizations (covenants,typeexaminations) values (1,10);
-insert into authorizations (covenants,typeexaminations) values (1,11);
-insert into authorizations (covenants,typeexaminations) values (2,1);
-insert into authorizations (covenants,typeexaminations) values (2,2);
-insert into authorizations (covenants,typeexaminations) values (2,3);
-insert into authorizations (covenants,typeexaminations) values (2,7);
-insert into authorizations (covenants,typeexaminations) values (2,8);
-insert into authorizations (covenants,typeexaminations) values (2,9);
-insert into authorizations (covenants,typeexaminations) values (2,10);
-insert into authorizations (covenants,typeexaminations) values (2,11);
-insert into authorizations (covenants,typeexaminations) values (3,5);
-insert into authorizations (covenants,typeexaminations) values (3,7);
-insert into authorizations (covenants,typeexaminations) values (3,8);
-insert into authorizations (covenants,typeexaminations) values (3,9);
-insert into authorizations (covenants,typeexaminations) values (3,10);
-insert into authorizations (covenants,typeexaminations) values (3,11);
-insert into authorizations (covenants,typeexaminations) values (3,12);
-insert into authorizations (covenants,typeexaminations) values (3,13);
-insert into authorizations (covenants,typeexaminations) values (3,14);
-insert into authorizations (covenants,typeexaminations) values (4,1);
-insert into authorizations (covenants,typeexaminations) values (4,2);
-insert into authorizations (covenants,typeexaminations) values (4,3);
-insert into authorizations (covenants,typeexaminations) values (5,4);
-insert into authorizations (covenants,typeexaminations) values (5,5);
-insert into authorizations (covenants,typeexaminations) values (5,6);
-insert into authorizations (covenants,typeexaminations) values (6,7);
-insert into authorizations (covenants,typeexaminations) values (6,8);
-insert into authorizations (covenants,typeexaminations) values (6,9);
-insert into authorizations (covenants,typeexaminations) values (6,10);
-insert into authorizations (covenants,typeexaminations) values (7,11);
-insert into authorizations (covenants,typeexaminations) values (7,12);
-insert into authorizations (covenants,typeexaminations) values (7,13);
-insert into authorizations (covenants,typeexaminations) values (7,14);
-insert into authorizations (covenants,typeexaminations) values (7,15);
+insert into authorizations (covenant_id,typeexamination_id) values (1,2);
+insert into authorizations (covenant_id,typeexamination_id) values (1,3);
+insert into authorizations (covenant_id,typeexamination_id) values (1,5);
+insert into authorizations (covenant_id,typeexamination_id) values (1,6);
+insert into authorizations (covenant_id,typeexamination_id) values (1,7);
+insert into authorizations (covenant_id,typeexamination_id) values (1,10);
+insert into authorizations (covenant_id,typeexamination_id) values (1,11);
+insert into authorizations (covenant_id,typeexamination_id) values (2,1);
+insert into authorizations (covenant_id,typeexamination_id) values (2,2);
+insert into authorizations (covenant_id,typeexamination_id) values (2,3);
+insert into authorizations (covenant_id,typeexamination_id) values (2,7);
+insert into authorizations (covenant_id,typeexamination_id) values (2,8);
+insert into authorizations (covenant_id,typeexamination_id) values (2,9);
+insert into authorizations (covenant_id,typeexamination_id) values (2,10);
+insert into authorizations (covenant_id,typeexamination_id) values (2,11);
+insert into authorizations (covenant_id,typeexamination_id) values (3,5);
+insert into authorizations (covenant_id,typeexamination_id) values (3,7);
+insert into authorizations (covenant_id,typeexamination_id) values (3,8);
+insert into authorizations (covenant_id,typeexamination_id) values (3,9);
+insert into authorizations (covenant_id,typeexamination_id) values (3,10);
+insert into authorizations (covenant_id,typeexamination_id) values (3,11);
+insert into authorizations (covenant_id,typeexamination_id) values (3,12);
+insert into authorizations (covenant_id,typeexamination_id) values (3,13);
+insert into authorizations (covenant_id,typeexamination_id) values (3,14);
+insert into authorizations (covenant_id,typeexamination_id) values (4,1);
+insert into authorizations (covenant_id,typeexamination_id) values (4,2);
+insert into authorizations (covenant_id,typeexamination_id) values (4,3);
+insert into authorizations (covenant_id,typeexamination_id) values (5,4);
+insert into authorizations (covenant_id,typeexamination_id) values (5,5);
+insert into authorizations (covenant_id,typeexamination_id) values (5,6);
+insert into authorizations (covenant_id,typeexamination_id) values (6,7);
+insert into authorizations (covenant_id,typeexamination_id) values (6,8);
+insert into authorizations (covenant_id,typeexamination_id) values (6,9);
+insert into authorizations (covenant_id,typeexamination_id) values (6,10);
+insert into authorizations (covenant_id,typeexamination_id) values (7,11);
+insert into authorizations (covenant_id,typeexamination_id) values (7,12);
+insert into authorizations (covenant_id,typeexamination_id) values (7,13);
+insert into authorizations (covenant_id,typeexamination_id) values (7,14);
+insert into authorizations (covenant_id,typeexamination_id) values (7,15);
 
 insert into bed (id,description,available) values (1,'Leito 1',true);
 insert into bed (id,description,available) values (2,'Leito 2',true);

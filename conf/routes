@@ -28,6 +28,7 @@ GET		/patient/list					controllers.PatientController.list()
 POST    /patient/save   			 	controllers.PatientController.save()
 POST    /patient/delete   				controllers.PatientController.delete()
 POST    /patient/edit   				controllers.PatientController.edit()
+POST    /patient/byCpf   				controllers.PatientController.byCpf()
 
 #TypeExaminations
 GET		/typeexaminations/list					controllers.TypeExaminationsController.list()
@@ -36,9 +37,24 @@ GET		/typeexaminations/list					controllers.TypeExaminationsController.list()
 
 GET		/consultation					controllers.ConsultationController.view()
 
+
+#Internar
+POST	/intern						controllers.InternController.intern()
+
 #Monitoramento
 
 GET		/monitoring					controllers.MonitoringController.view()
+
+#Convênios
+GET		/covenants/list					controllers.CovenantsController.list()
+
+#Beds
+GET		/beds/list					controllers.BedsController.list()
+
+#Autorizações
+POST	/authorizations/byCovenants			controllers.AuthorizationsController.byConvenants()
+GET			/authorizations/getAuthorization		controllers.AuthorizationsController.getAuthorization()
+
 
 #Historico paciente
 
@@ -60,4 +76,5 @@ POST    /computers/:id/delete       controllers.Application.delete(id:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
 

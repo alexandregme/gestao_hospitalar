@@ -1,0 +1,62 @@
+@main {
+
+<div ng-controller="MonitoringCtrl">
+
+	<h1 id="homeTitle">Pacientes Internados</h1>
+	
+	<table class="computers zebra-striped" >
+		<thead>
+			<tr>
+				<td>Id</td>
+				<td>CPF</td>
+				<td>Nome</td>
+				<td>Leito</td>
+				<td>Ações</td>
+			</tr>
+		</thead>
+		<tbody >
+			<tr ng-repeat="item in data">
+	   			<td ng-model="id">{{item.id}}</td>
+	   	        <td> {{item.patient.cpf}} </td>
+	   	        <td> {{item.patient.name}} </td>
+	   	        <td> {{item.bed.description}} </td>
+	            <td><input type="button" value="Adicionar Informação" class="btn primary" ng-click="addInformation($index)">&nbsp;&nbsp;
+	            <input type="button" value="Liberar Paciente" class="btn danger" ng-click="release(item.id)"></td>
+             </tr>
+	        </tbody>
+	    </table>
+</div>	    
+	<script type="text/javascript">
+	
+		function MonitoringCtrl ($scope, $http) {
+
+			$scope.list = function () {
+				
+				var _url = "@routes.InternController.list()";
+				
+				$http({method: 'GET', url: _url}).success(function(data, status, headers, config) {
+					
+			  		$scope.data = data.data;
+
+				}).error(function(data, status, headers, config) {
+
+					console.log(status);
+			  	});
+
+
+		
+			}
+			
+			$scope.clear = function () {
+				$scope.name = '';
+				$scope.cpf = '';
+				$scope.endereco = '';
+				$scope.message = '';
+			}
+			
+			$scope.list();
+		
+		}
+		
+    </script>
+}

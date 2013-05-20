@@ -15,73 +15,74 @@ import views.html.patient;
 
 public class PatientController extends Controller  {
 
-	 private static Protocol protocol = null;
-	 
-	 public static Result save() {
-		 
-		 JsonNode json = request().body().asJson();
-		 
-		 Patient p = Json.fromJson(json, Patient.class);
-		 
-		 try{
-			 
-			 p.save();
-			 
-			 protocol = new Protocol('s',Messages.get("INSERT"), p, 1);
-		 
-		 }catch (Exception e){
-			 
-			 e.printStackTrace();
-			 
-			 protocol = new Protocol('e' , Messages.get("ERROR"), null, 0);
-		 }
+	private static Protocol protocol = null;
 
-		 return ok(Json.toJson(protocol));
-	 }
-	 
- public static Result edit() {
-	 JsonNode json = request().body().asJson();
-	 Patient p = Json.fromJson(json, Patient.class);
+	public static Result save() {
 
-	 try{
-		 Patient patient = Patient.find.ref(p.id);
-		 
-		 patient.name = p.name;
-		 
-		 patient.endereco = p.endereco;
-		 
-		 patient.cpf = p.cpf;
-		 
-		 patient.save();
-		 
-		 protocol = new Protocol('s',"Editou", p, 1);
-	 
-	 }catch (Exception e){
-		 
-		 e.printStackTrace();
-		 
-		 protocol = new Protocol('e',"erro", null, 0);
-	 }
-	 return ok(Json.toJson(protocol));
-    }
-    
- public static Result delete() {
-	 JsonNode json = request().body().asJson();
-	 Patient p = Json.fromJson(json, Patient.class);
+		JsonNode json = request().body().asJson();
 
-	 try{
-		 Patient.find.ref(p.id).delete();
-		 
-		 protocol = new Protocol('s',"deletou", p, 1);
-	 
-	 }catch (Exception e){
-		 
-		 e.printStackTrace();
-		 
-		 protocol = new Protocol('e',"erro", null, 0);
-	 }
-	 return ok(Json.toJson(protocol));
-    }
+		Patient p = Json.fromJson(json, Patient.class);
+
+		try{
+
+			p.save();
+
+			protocol = new Protocol('s',Messages.get("INSERT"), p, 1);
+
+		}catch (Exception e){
+
+			e.printStackTrace();
+
+			protocol = new Protocol('e' , Messages.get("ERROR"), null, 0);
+		}
+
+		return ok(Json.toJson(protocol));
+	}
+
+	public static Result edit() {
+		JsonNode json = request().body().asJson();
+		Patient p = Json.fromJson(json, Patient.class);
+
+		try{
+			Patient patient = Patient.find.ref(p.id);
+
+			patient.name = p.name;
+
+			patient.endereco = p.endereco;
+
+			patient.cpf = p.cpf;
+
+			patient.save();
+
+			protocol = new Protocol('s',"Editou", p, 1);
+
+		}catch (Exception e){
+
+			e.printStackTrace();
+
+			protocol = new Protocol('e',"erro", null, 0);
+		}
+		return ok(Json.toJson(protocol));
+	}
+
+	public static Result delete() {
+		JsonNode json = request().body().asJson();
+		Patient p = Json.fromJson(json, Patient.class);
+
+		try{
+			Patient.find.ref(p.id).delete();
+
+			protocol = new Protocol('s',"deletou", p, 1);
+
+		}catch (Exception e){
+
+			e.printStackTrace();
+
+			protocol = new Protocol('e',"erro", null, 0);
+		}
+		return ok(Json.toJson(protocol));
+	}
+
 	public static Result view(){
 
 		return ok(patient.render());
@@ -93,6 +94,19 @@ public class PatientController extends Controller  {
 		List<Patient> patients = Patient.find.all();
 
 		protocol = new Protocol('s',Messages.get("CONSULTA_REALIZADA"), patients, 1);
+
+		return ok(Json.toJson(protocol));
+
+	}
+
+	public static Result byCpf() {
+
+		JsonNode json = request().body().asJson();
+		Patient p = Json.fromJson(json, Patient.class);
+
+		Patient patient = Patient.find.where().ilike("cpf", "%" + p.cpf + "%").findUnique();
+
+		protocol = new Protocol('s',Messages.get("CONSULTA_REALIZADA"), patient, 1);
 
 		return ok(Json.toJson(protocol));
 
